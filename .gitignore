@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+.flaskenv
+.env
+
+# Flask instance folder (often contains local databases/secrets)
+instance/
+
+# OS generated files
+.DS_Store
+Thumbs.db

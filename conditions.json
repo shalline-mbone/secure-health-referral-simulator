@@ -1,0 +1,49 @@
+{
+  "conditions": [
+    {
+      "id": "stroke",
+      "name": "Acute Ischemic Stroke",
+      "severity": "critical",
+      "required_capabilities": ["neurologist", "ct_scan", "icu"],
+      "county_can_handle": false,
+      "bypass_required": true,
+      "educational_note": "Most county hospitals lack neurologists and CT scanners"
+    },
+    {
+      "id": "fracture",
+      "name": "Simple Fracture",
+      "severity": "moderate",
+      "required_capabilities": ["xray", "surgery"],
+      "county_can_handle": true,
+      "bypass_required": false,
+      "educational_note": "County hospitals can handle simple fractures with x-ray and basic surgery"
+    },
+    {
+      "id": "maternity",
+      "name": "Routine Maternity",
+      "severity": "moderate",
+      "required_capabilities": ["maternity", "lab"],
+      "county_can_handle": true,
+      "bypass_required": false,
+      "educational_note": "Most county hospitals have maternity services"
+    },
+    {
+      "id": "pediatric_emergency",
+      "name": "Pediatric Emergency",
+      "severity": "critical",
+      "required_capabilities": ["pediatrics", "icu"],
+      "county_can_handle": false,
+      "bypass_required": true,
+      "educational_note": "Requires specialized pediatric ICU often only at national level"
+    },
+    {
+      "id": "heart_attack",
+      "name": "Myocardial Infarction",
+      "severity": "critical",
+      "required_capabilities": ["cardiologist", "icu"],
+      "county_can_handle": false,
+      "bypass_required": true,
+      "educational_note": "Cardiac emergencies require specialist care at national hospitals"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Referral Token Generated</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3>Referral Token Generated Successfully</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>{{ result.security_message }}</strong>
+                </div>
+                
+                <div class="card mb-3 border-primary">
+                    <div class="card-body text-center">
+                        <h4>Referral Token</h4>
+                        <h1 class="text-primary">{{ result.token }}</h1>
+                        <button class="btn btn-sm btn-secondary" onclick="copyToken()">Copy Token</button>
+                    </div>
+                </div>
+                
+                <h5>Referral Details:</h5>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item"><strong>Patient:</strong> {{ result.patient_name }}</li>
+                    <li class="list-group-item"><strong>Condition:</strong> {{ result.condition }}</li>
+                    <li class="list-group-item"><strong>Severity:</strong> {{ result.severity }}</li>
+                    <li class="list-group-item"><strong>Referral Type:</strong> {{ result.referral_type }}</li>
+                    <li class="list-group-item"><strong>Recommended Hospital:</strong> {{ result.recommended_hospital }} ({{ result.hospital_tier }})</li>
+                    <li class="list-group-item"><strong>Rationale:</strong> {{ result.rationale }}</li>
+                </ul>
+                
+                <div class="alert alert-info">
+                    <strong>📚 Educational Note:</strong> {{ result.educational_note }}
+                </div>
+                
+                <a href="/doctor/dashboard" class="btn btn-primary">Make Another Referral</a>
+                <a href="/" class="btn btn-secondary">Home</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    function copyToken() {
+        navigator.clipboard.writeText("{{ result.token }}");
+        alert("Token copied to clipboard!");
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{
+  "county_hospitals": [
+    {
+      "id": "mbagathi",
+      "name": "Mbagathi District Hospital",
+      "tier": "County",
+      "location": "Nairobi",
+      "capabilities": ["general_ward", "xray", "lab", "maternity", "pediatrics", "surgery_basic"],
+      "bed_capacity": 300,
+      "contact": "+254-20-123456"
+    },
+    {
+      "id": "mama_lucy",
+      "name": "Mama Lucy Kibaki Hospital",
+      "tier": "County",
+      "location": "Nairobi",
+      "capabilities": ["general_ward", "xray", "lab", "maternity", "pediatrics", "surgery_basic"],
+      "bed_capacity": 400,
+      "contact": "+254-20-789012"
+    },
+    {
+      "id": "kiambu",
+      "name": "Kiambu County Referral Hospital",
+      "tier": "County",
+      "location": "Kiambu",
+      "capabilities": ["general_ward", "xray", "lab", "maternity", "surgery_basic"],
+      "bed_capacity": 250,
+      "contact": "+254-66-345678"
+    },
+    {
+      "id": "kisumu",
+      "name": "Jaramogi Oginga Odinga Teaching & Referral Hospital",
+      "tier": "County",
+      "location": "Kisumu",
+      "capabilities": ["general_ward", "xray", "ct_scan", "lab", "maternity", "surgery", "icu_basic"],
+      "bed_capacity": 500,
+      "contact": "+254-57-901234"
+    },
+    {
+      "id": "nakuru",
+      "name": "Nakuru County Referral Hospital",
+      "tier": "County",
+      "location": "Nakuru",
+      "capabilities": ["general_ward", "xray", "lab", "maternity", "surgery", "pediatrics"],
+      "bed_capacity": 350,
+      "contact": "+254-51-567890"
+    }
+  ],
+  "national_hospitals": [
+    {
+      "id": "knh",
+      "name": "Kenyatta National Hospital",
+      "tier": "National",
+      "location": "Nairobi",
+      "capabilities": ["ct_scan", "mri", "neurologist", "cardiologist", "icu", "ventilator", "surgery_complex", "oncology", "radiology", "nuclear_medicine"],
+      "bed_capacity": 1800,
+      "contact": "+254-20-2726300"
+    },
+    {
+      "id": "mtrh",
+      "name": "Moi Teaching & Referral Hospital",
+      "tier": "National",
+      "location": "Eldoret",
+      "capabilities": ["ct_scan", "neurologist", "cardiologist", "icu", "ventilator", "surgery_complex", "oncology", "radiology"],
+      "bed_capacity": 950,
+      "contact": "+254-53-2033471"
+    }
+  ],
+  "capability_mapping": {
+    "stroke": ["ct_scan", "neurologist", "icu"],
+    "heart_attack": ["cardiologist", "icu", "ventilator"],
+    "myocardial_infarction": ["cardiologist", "icu", "ventilator"],
+    "pediatric_emergency": ["pediatrics", "icu", "ventilator"],
+    "maternity_complicated": ["icu", "surgery_complex"],
+    "maternity_routine": ["maternity", "lab"],
+    "fracture_complex": ["surgery_complex", "xray"],
+    "fracture_simple": ["xray"],
+    "general_illness": ["general_ward"],
+    "pneumonia": ["general_ward", "xray", "lab"],
+    "appendicitis": ["surgery_basic", "lab"],
+    "cancer": ["oncology", "radiology", "ct_scan"]
+  }
+}

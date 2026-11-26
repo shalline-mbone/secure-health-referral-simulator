@@ -1,0 +1,229 @@
+{% extends "dashboard_layout.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Secure Referral System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .admin-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 1400px;
+        }
+        .stat-card {
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .action-card {
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+<div class="admin-container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="fas fa-chart-line text-primary"></i> Admin Dashboard</h2>
+            <p class="text-muted">System overview and analytics</p>
+        </div>
+        <div>
+            <span class="badge bg-primary p-2">
+                <i class="fas fa-user-shield"></i> {{ current_user.username }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <small>TOTAL USERS</small>
+                        <h2>{{ total_users }}</h2>
+                    </div>
+                    <i class="fas fa-users fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <small>TOTAL REFERRALS</small>
+                        <h2>{{ total_referrals }}</h2>
+                    </div>
+                    <i class="fas fa-stethoscope fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <small>SUCCESSFUL</small>
+                        <h2>{{ successful_count }}</h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <small>PENDING</small>
+                        <h2>{{ pending_count }}</h2>
+                    </div>
+                    <i class="fas fa-clock fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="chart-container">
+                <h5><i class="fas fa-chart-line"></i> Monthly Referral Trends</h5>
+                <canvas id="referralChart" height="250"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <h5><i class="fas fa-chart-pie"></i> Referral Status</h5>
+                <canvas id="statusChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+        </div>
+        {% for action in admin_actions %}
+        <div class="col-md-4">
+            <div class="action-card" onclick="window.location.href='{{ url_for(action.endpoint) }}'" style="cursor: pointer;">
+                {% if action.name == 'Manage Users' %}
+                    <i class="fas fa-users fa-3x text-primary mb-2"></i>
+                {% elif action.name == 'View Referrals' %}
+                    <i class="fas fa-file-medical fa-3x text-success mb-2"></i>
+                {% else %}
+                    <i class="fas fa-cog fa-3x text-warning mb-2"></i>
+                {% endif %}
+                <h6>{{ action.name }}</h6>
+                <small class="text-muted">Click to manage</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="chart-container">
+            <h5><i class="fas fa-chart-line"></i> Monthly Referral Trends</h5>
+            {% set has_data = monthly_counts|sum > 0 %}
+            {% if not has_data %}
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle"></i> No referral data yet. 
+                <a href="{{ url_for('add_referral') }}">Create your first referral</a> to see charts populate!
+            </div>
+            {% endif %}
+            <canvas id="referralChart" height="250"></canvas>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="chart-container">
+            <h5><i class="fas fa-chart-pie"></i> Referral Status</h5>
+            <canvas id="statusChart" height="250"></canvas>
+        </div>
+    </div>
+</div>
+
+    <script>
+    // Monthly Referral Chart
+    const ctx = document.getElementById('referralChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ months|tojson }},
+            datasets: [{
+                label: 'Monthly Referrals',
+                data: {{ monthly_counts|tojson }},
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { position: 'top' }
+            }
+        }
+    });
+    // Status Pie Chart
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Successful', 'Pending'],
+            datasets: [{
+                data: [{{ successful_count }}, {{ pending_count }}],
+                backgroundColor: ['#43e97b', '#f5af19'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
+</body>
+</html>
+{% endblock %}

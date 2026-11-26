@@ -1,0 +1,80 @@
+{% extends "dashboard_layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white text-center">
+                    <h3><i class="fa-solid fa-key"></i> Secure Referral Token Generated</h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="alert alert-warning">
+                        <i class="fa-solid fa-shield-hart"></i>
+                        <strong>DO NOT share patient data via WhatsApp/Email</strong>
+                        <br>Share ONLY this token with the receiving hospital
+                    </div>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5>Referral Token</h5>
+                            <h1 class="text-primary" style="font-family: monospace; letter-spacing: 2px;">{{ referral.referral_token }}</h1>
+                            <button class="btn btn-sm btn-secondary mt-2" onclick="copyToken()">
+                                <i class="fa-solid fa-copy"></i> Copy Token
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="row text-start">
+                        <div class="col-md-6">
+                            <h5>Patient Details</h5>
+                            <p><strong>Name:</strong> {{ referral.name }}</p>
+                            <p><strong>Condition:</strong> {{ referral.condition_type|replace('_', ' ')|title }}</p>
+                            <p><strong>Severity:</strong> 
+                                <span class="badge 
+                                    {% if referral.severity == 'critical' %}bg-danger
+                                    {% elif referral.severity == 'severe' %}bg-warning
+                                    {% elif referral.severity == 'moderate' %}bg-info
+                                    {% else %}bg-success{% endif %}">
+                                    {{ referral.severity|upper }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Referral Destination</h5>
+                            <p><strong>Hospital:</strong> {{ referral.recommended_hospital }}</p>
+                            <p><strong>Tier:</strong> {{ referral.hospital_tier }}</p>
+                            <p><strong>Reason:</strong> {{ referral.bypass_reason }}</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="alert alert-info">
+                        <strong>📋 Instructions:</strong>
+                        <ol class="mb-0 mt-2">
+                            <li>Give this token to the patient or send it securely to receiving hospital</li>
+                            <li>Receiving hospital will enter the token to access patient information</li>
+                            <li>Token is single-use and expires after validation</li>
+                            <li>Never share complete patient records via unsecured channels</li>
+                        </ol>
+                    </div>
+                    
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                        <i class="fa-solid fa-chart-line"></i> Back to Dashboard
+                    </a>
+                    <a href="{{ url_for('add_referral') }}" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-plus"></i> New Referral
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToken() {
+    navigator.clipboard.writeText("{{ referral.referral_token }}");
+    alert("✅ Token copied to clipboard!");
+}
+</script>
+{% endblock %}

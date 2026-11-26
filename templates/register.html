@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Secure Referral Simulator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: navy;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+        .btn-primary {
+            background-color: navy;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #003366;
+        }
+        .form-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .hospital-select {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-person-plus"></i> Create Your Account
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('register') }}">
+                        <!-- Username (Email format) -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-envelope"></i> Email (Username)
+                            </label>
+                            <input type="text" class="form-control" name="username" id="username"
+                                   placeholder="name@email.com"
+                                   pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+                                   required>
+                            <div class="form-text">
+                                Use your official hospital email or a valid email format.  
+                                Example: <em>achieng@knh.or.ke</em>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3 position-relative">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password" id="password"
+                                       placeholder="Enter a secure password"
+                                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,}$"
+                                       required>
+                                <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                Must be at least 8 characters and include:  
+                                • One <strong>capital letter</strong>  
+                                • One <strong>small letter</strong>  
+                                • One <strong>number</strong>  
+                                • One <strong>symbol</strong> (e.g. @, #, $)  
+                                Example: <em>Shalline@2026</em>
+                            </div>
+                        </div>
+
+                        <!-- License Number -->
+                        <div class="mb-3">
+                            <label for="license_number" class="form-label">
+                                <i class="bi bi-card-checklist"></i> Medical License Number
+                            </label>
+                            <input type="text" class="form-control" name="license_number" id="license_number"
+                                   placeholder="e.g. KMPDC12345" required>
+                            <div class="form-text">
+                                Enter your valid KMPDC license number for verification.  
+                                (Currently only <strong>KMPDC12345</strong>, <strong>KMPDC67890</strong>, or <strong>KMPDC54321</strong> will work until we connect to a real dataset.)
+                            </div>
+                        </div>
+
+                        <!-- NEW: Hospital Selection -->
+                        <div class="mb-3">
+                            <label for="hospital_name" class="form-label">
+                                <i class="bi bi-building"></i> Your Hospital
+                            </label>
+                            <select name="hospital_name" id="hospital_name" class="form-control hospital-select" required>
+                                <option value="">-- Select your hospital --</option>
+                                <option value="Mbagathi District Hospital">🏥 Mbagathi District Hospital (County)</option>
+                                <option value="Mama Lucy Kibaki Hospital">🏥 Mama Lucy Kibaki Hospital (County)</option>
+                                <option value="Kiambu County Referral Hospital">🏥 Kiambu County Referral Hospital (County)</option>
+                                <option value="Jaramogi Oginga Odinga Teaching & Referral Hospital">🏥 Jaramogi Oginga Odinga Teaching & Referral Hospital (County)</option>
+                                <option value="Nakuru County Referral Hospital">🏥 Nakuru County Referral Hospital (County)</option>
+                                <option value="Kenyatta National Hospital">🏨 Kenyatta National Hospital (National)</option>
+                                <option value="Moi Teaching & Referral Hospital">🏨 Moi Teaching & Referral Hospital (National)</option>
+                            </select>
+                            <div class="form-text">
+                                Select the hospital where you work. This determines:
+                                <ul class="mt-1 mb-0">
+                                    <li>Which referrals you will receive (incoming to your hospital)</li>
+                                    <li>Which referrals you can make (outgoing from your hospital)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Role selection (hidden for regular users, but can be shown for admins) -->
+                        <input type="hidden" name="role" value="user">
+
+                        <!-- Submit -->
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-check-circle"></i> Register
+                        </button>
+                    </form>
+
+                    <!-- Flash messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        <div class="mt-3">
+                          {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+
+                    <!-- Link to login -->
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('login') }}" class="text-decoration-none">
+                            <i class="bi bi-box-arrow-in-right"></i> Already have an account? Login here
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Password visibility toggle
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#password');
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.innerHTML = type === 'password'
+            ? '<i class="bi bi-eye"></i>'
+            : '<i class="bi bi-eye-slash"></i>';
+    });
+</script>
+</body>
+</html>
